@@ -60,10 +60,14 @@ main header {
 .project {
     height: 100vh;
     width: 40%;
-    border-bottom: 2px dotted red;
+    border-bottom: 5.5vw dashed blue;
     background: white;
 
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.project:last-child {
+    border-bottom: none;
 }
