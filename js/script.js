@@ -1,42 +1,63 @@
 
 fetch('https://api.github.com/users/emilnilsson12/repos')
-.then(response => response.json())
-.then(repos => {
+    .then(response => response.json())
+    .then(repos => {
+
+        console.log("Repos clean");
+        console.table(repos, ["name", "updated_at"]);
+
+        const noForks = repos.filter(repo => repo.fork == false);
+        const excludeThisPortolio = noForks.filter(repo => repo.name != 'portfolio');
+        const sortedByLastUpdate = sortByLastUpdated(excludeThisPortolio);
+
+        renderRepos(sortedByLastUpdate);
+    })
+
     
-    console.log("Repos clean");
-    console.table(repos, ["name", "updated_at"]);
-
-    const noForks = repos.filter(repo => repo.fork == false);
-    const excludeThisPortolio = noForks.filter(repo => repo.name != 'portfolio');
-    const sortedByLastUpdate = sortByLastUpdated(excludeThisPortolio);
-
-    renderRepos(sortedByLastUpdate);
-})
-
-// Create a li for each repo, and add it to the nav
-
-function renderRepos(repos) {
-
-    // Add link in nav
-    const ulTag = document.getElementById('navUl');
-    ulTag.innerHTML = '<li><a href="#start"><div>BACK TO TOP</div></a></li>';
-    for (repo in repos) {
-        console.log(repos[repo].name);
-        const liTag = `
-            <li>
-            <a href="#${repos[repo].name}">
-            <div>
-            ${repos[repo].name}
-            </div>
+    function renderRepos(repos) {
+        
+        const ulTag = document.getElementById('navUl');
+        ulTag.innerHTML = '<li><a href="#start"><div>BACK TO TOP</div></a></li>';
+        const projectsSection = document.getElementById('projects');
+        projectsSection.innerHTML = '';
+        for (repo of repos) {
+            
+        // Add link in nav
+        // Create a li for each repo, and add it to the nav
+        const liTag = document.createElement('li');
+        const liDiv = document.createElement('div');
+        liDiv.innerHTML = `
+            <a href="#${repo.name}">
+                ${repo.name}
             </a>
-            </li>
         `;
-        ulTag.insertAdjacentHTML('beforeend', liTag);
-    }
 
-    // Add article for repo
-    
+        const articleTag = document.createElement('article');
+        articleTag.classList.add('project');
+        articleTag.id = `${repo.name}`;
+        articleTag.innerHTML = `
+            <h2>${repo.name}</h2>
+            <p>${repo.description}</p>
+        `;
+        
+        if (repo["has_pages"]) {
+            const linkToLiveDemo = `<a href="https://${repo.owner.login}.github.io/${repo.name}/" target="_blank" class="liveDemo projectLink">Click here to try it!</a>`;
+            console.log("Has live demo!");
+            articleTag.insertAdjacentHTML('beforeend', linkToLiveDemo)
+
+            liDiv.insertAdjacentHTML('beforeend', '<em>Live demo included</em>')
+        }
+        else {
+            articleTag.insertAdjacentHTML('beforeend', "<div class='underConstruction projectLink'><strong>Live demo coming soon!</strong></div>")
+        }
+        
+        liTag.appendChild(liDiv);
+        ulTag.appendChild(liTag);
+
+        projectsSection.appendChild(articleTag);
+    }
 }
+
 
 
 function sortByLastUpdated(repos) {
