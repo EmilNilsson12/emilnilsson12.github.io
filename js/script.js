@@ -2,13 +2,9 @@
 fetch('https://api.github.com/users/emilnilsson12/repos')
     .then(response => response.json())
     .then(repos => {
-
-        console.log("Repos clean");
-        console.table(repos, ["name", "updated_at"]);
-
         const noForks = repos.filter(repo => repo.fork == false);
         const excludeThisPortolio = noForks.filter(repo => repo.name != 'portfolio');
-        const sortedByLastUpdate = sortByLastUpdated(excludeThisPortolio);
+        const sortedByLastUpdate = sortByLastPushed(excludeThisPortolio);
 
         renderRepos(sortedByLastUpdate);
     })
@@ -60,14 +56,14 @@ fetch('https://api.github.com/users/emilnilsson12/repos')
 
 
 
-function sortByLastUpdated(repos) {
+function sortByLastPushed(repos) {
 
     // Convert from string of format ["YYYY-MM-DDTHH:MM:SS"] 
     // To array of [YYYY, MM, DD]
     repos.forEach(repo => {
 
         // Replace string of whole date to just the year-month-day
-        let repoDate = repo["updated_at"];
+        let repoDate = repo["pushed_at"];
         repoDate = repoDate.split("-");
         repoDate[2] = repoDate[2].split("T")[0];
 
@@ -77,7 +73,7 @@ function sortByLastUpdated(repos) {
             dateSegment = parseInt(dateSegment);
             dateFormattedWithNums.push(dateSegment);
         });
-        repo["updated_at"] = dateFormattedWithNums;
+        repo["pushed_at"] = dateFormattedWithNums;
     });
 
     do {
@@ -85,25 +81,28 @@ function sortByLastUpdated(repos) {
 
         for (let i = 0; i < repos.length - 1; i++) {
             let temp;
+            const repoA = repos[i]["pushed_at"];
+            const repoB = repos[i + 1]["pushed_at"];
+
             // let myDate = repos[i];
             // Bubble the oldest year down in the array
-            if (repos[i]["updated_at"][0] < repos[i + 1]["updated_at"][0]) {
+            if (repoA[0] < repoB[0]) {
                 temp = repos[i];
                 repos[i] = repos[i + 1];
                 repos[i + 1] = temp;
                 swap = true;
-            } else if (repos[i]["updated_at"][0] == repos[i + 1]["updated_at"][0]) {
+            } else if (repoA[0] == repoB[0]) {
                 // If the year is the same
                 // Bubble the oldest month down the array
-                if (repos[i]["updated_at"][1] < repos[i + 1]["updated_at"][1]) {
+                if (repoA[1] < repoB[1]) {
                     temp = repos[i];
                     repos[i] = repos[i + 1];
                     repos[i + 1] = temp;
                     swap = true;
-                } else if (repos[i]["updated_at"][1] == repos[i + 1]["updated_at"][1]) {
+                } else if (repoA[1] == repoB[1]) {
                     // If the year AND month is the same
                     // Bubble the oldest day down the array
-                    if (repos[i]["updated_at"][2] < repos[i + 1]["updated_at"][2]) {
+                    if (repoA[2] < repoB[2]) {
                         temp = repos[i];
                         repos[i] = repos[i + 1];
                         entries[i + 1] = temp;
