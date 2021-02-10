@@ -10,21 +10,21 @@ body > header {
 }
 
 nav {
-    width: 30%;
-    position: absolute;
-    right: 0;
+    position: fixed;
+    right: 5%;
 }
 
 ul {
-    
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
 }
 
 li div{
     background: yellow;
-    width: 100px;
     height: 40px;
+    padding: 0 10px;
+    margin: 5px 0;
     border-radius: 6px;
 
     
@@ -62,4 +62,8 @@ main header {
     width: 40%;
     border-bottom: 2px dotted red;
     background: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
