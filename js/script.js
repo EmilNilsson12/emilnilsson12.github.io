@@ -7,13 +7,36 @@ fetch('https://api.github.com/users/emilnilsson12/repos')
     console.table(repos, ["name", "updated_at"]);
 
     const noForks = repos.filter(repo => repo.fork == false);
+    const excludeThisPortolio = noForks.filter(repo => repo.name != 'portfolio');
+    const sortedByLastUpdate = sortByLastUpdated(excludeThisPortolio);
 
-    const sortedByLastUpdate = sortByLastUpdated(noForks);
-
-    console.log("Repos sorted by date");
-    console.table(sortedByLastUpdate, ["name", "updated_at"]);
-
+    renderRepos(sortedByLastUpdate);
 })
+
+// Create a li for each repo, and add it to the nav
+
+function renderRepos(repos) {
+
+    // Add link in nav
+    const ulTag = document.getElementById('navUl');
+    ulTag.innerHTML = '<li><a href="#start"><div>BACK TO TOP</div></a></li>';
+    for (repo in repos) {
+        console.log(repos[repo].name);
+        const liTag = `
+            <li>
+            <a href="#${repos[repo].name}">
+            <div>
+            ${repos[repo].name}
+            </div>
+            </a>
+            </li>
+        `;
+        ulTag.insertAdjacentHTML('beforeend', liTag);
+    }
+
+    // Add article for repo
+    
+}
 
 
 function sortByLastUpdated(repos) {
