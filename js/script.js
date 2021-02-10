@@ -3,7 +3,7 @@ fetch('https://api.github.com/users/emilnilsson12/repos')
     .then(response => response.json())
     .then(repos => {
         const noForks = repos.filter(repo => repo.fork == false);
-        const excludeThisPortolio = noForks.filter(repo => repo.name != 'portfolio');
+        const excludeThisPortolio = noForks.filter(repo => repo.name != 'EmilNilsson12');
         const sortedByLastUpdate = sortByLastPushed(excludeThisPortolio);
 
         renderRepos(sortedByLastUpdate);
