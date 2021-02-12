@@ -3,21 +3,22 @@ fetch('https://api.github.com/users/emilnilsson12/repos')
     .then(response => response.json())
     .then(repos => {
         const noForks = repos.filter(repo => repo.fork == false);
-        const excludeThisPortolio = noForks.filter(repo => repo.name != 'emilnilsson12.github.io' && repo.name != 'EmilNilsson12' );
+        const excludeThisPortolio = noForks.filter(repo => repo.name != 'emilnilsson12.github.io' && repo.name != 'EmilNilsson12');
         const sortedByLastUpdate = sortByLastPushed(excludeThisPortolio);
 
         renderRepos(sortedByLastUpdate);
     })
 
-    
-    function renderRepos(repos) {
-        
-        const ulTag = document.getElementById('navUl');
-        ulTag.innerHTML = '<li><a href="#start"><div>BACK TO TOP</div></a></li>';
-        const projectsSection = document.getElementById('projects');
-        projectsSection.innerHTML = '';
-        for (repo of repos) {
-            
+
+function renderRepos(repos) {
+
+    const ulTag = document.getElementById('navUl');
+    ulTag.innerHTML = '<li><a href="#start"><div>BACK TO TOP</div></a></li>';
+    const projectsSection = document.getElementById('projects');
+    projectsSection.innerHTML = '';
+
+    for (repo of repos) {
+
         // Add link in nav
         // Create a li for each repo, and add it to the nav
         const liTag = document.createElement('li');
@@ -36,17 +37,30 @@ fetch('https://api.github.com/users/emilnilsson12/repos')
             <p>${repo.description}</p>
         `;
         
+        const img = document.createElement('img');
+        const imgContainer = document.createElement('div');
+
         if (repo["has_pages"]) {
             const linkToLiveDemo = `<a href="https://${repo.owner.login}.github.io/${repo.name}/" target="_blank" class="liveDemo projectLink">Click here to try it!</a>`;
             console.log("Has live demo!");
             articleTag.insertAdjacentHTML('beforeend', linkToLiveDemo)
 
+            img.src = `../img/${repo.name}.png`;
+            imgContainer.classList.add('imgContainer');
+            imgContainer.appendChild(img);
+            articleTag.insertAdjacentElement('beforeend', imgContainer);
+            
             liDiv.insertAdjacentHTML('beforeend', '<em>Live demo included</em>')
         }
         else {
             articleTag.insertAdjacentHTML('beforeend', "<div class='underConstruction projectLink'><strong>Live demo coming soon!</strong></div>")
+            
+            img.src = `../img/404.png`;
+            imgContainer.classList.add('imgContainer');
+            imgContainer.appendChild(img);
+            articleTag.insertAdjacentElement('beforeend', imgContainer);
         }
-        
+
         liTag.appendChild(liDiv);
         ulTag.appendChild(liTag);
 

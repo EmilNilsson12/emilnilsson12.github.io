@@ -71,13 +71,13 @@ main header {
 
 .project {
     height: 100vh;
-    width: 40%;
+    width: 60%;
     border-bottom: 5.5vw dashed blue;
     background: white;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -100,4 +100,24 @@ main header {
     color: firebrick;
     background-color: orange;
     border: 2px dashed brown;
+}
+
+h2 {
+    margin-top: 50px;
+}
+
+.imgContainer {
+    border: 10px solid rgba(21, 69, 100, 0.3);
+    width: 80%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+img {
+    width: 90%;
+    border-radius: 50px;
+    padding: 25px;
 }
