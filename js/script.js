@@ -119,7 +119,7 @@ function sortByLastPushed(repos) {
                     if (repoA[2] < repoB[2]) {
                         temp = repos[i];
                         repos[i] = repos[i + 1];
-                        entries[i + 1] = temp;
+                        repos[i + 1] = temp;
                         swap = true;
                     }
                     // If the year, month AND day is the same then no swap is needed
